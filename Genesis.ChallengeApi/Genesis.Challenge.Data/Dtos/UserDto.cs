@@ -9,6 +9,10 @@ namespace Genesis.Challenge.Data.Dtos
     {
         [Key]
         public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public List<string> TelephoneNumbers { get; set; }
         public DateTime CreatedOnUtc { get; set; }
         public DateTime LastUpdatedOnUtc { get; set; }
         public DateTime LastLoginOnUtc { get; set; }
