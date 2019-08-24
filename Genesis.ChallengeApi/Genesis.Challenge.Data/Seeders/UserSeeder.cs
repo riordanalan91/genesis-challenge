@@ -24,22 +24,22 @@ namespace Genesis.Challenge.Data.Seeders
                 context.Users.AddRange(
                     new UserDto
                     {
-                        Id = Guid.NewGuid(),
+                        Id = new Guid("2e0f3527-c781-4866-a366-edd44b84a7b6"),
                         Name = "Alan Riordan",
                         Email = "ariordan@domain.com",
                         Password = "qwerty",
-                        TelephoneNumbers = new List<string>() { "0851234567", "0211234567" },
+                        TelephoneNumbers = "[\"0851234567\", \"0211234567\"]",
                         CreatedOnUtc = new DateTime(2019, 8, 1),
                         LastLoginOnUtc = new DateTime(2019, 8, 22),
                         LastUpdatedOnUtc = new DateTime(2019, 8, 1)
                     },
                     new UserDto
                     {
-                        Id = Guid.NewGuid(),
+                        Id = new Guid("00c96463-2db1-48b7-94d3-3e4e2617d904"),
                         Name = "Jane Doe",
                         Email = "jdoe@domain.com",
                         Password = "pass1",
-                        TelephoneNumbers = new List<string>() { "0857654321", "0217654321" },
+                        TelephoneNumbers = "[\"08576543212\", \"0217654321\"]",
                         CreatedOnUtc = new DateTime(2019, 7, 1),
                         LastLoginOnUtc = new DateTime(2019, 8, 22),
                         LastUpdatedOnUtc = new DateTime(2019, 7, 1)

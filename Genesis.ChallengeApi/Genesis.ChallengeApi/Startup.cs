@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Genesis.Challenge.Api.Services;
+using Genesis.Challenge.Data.Commands;
 using Genesis.Challenge.Data.Contexts;
+using Genesis.Challenge.Data.Dtos;
+using Genesis.Challenge.Data.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,8 +31,13 @@ namespace Genesis.Challenge.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<UsersDbContext>(options => options.UseInMemoryDatabase(databaseName: "Users"));
+            services
+                .AddScoped<IUsersService, UsersService>()
+                .AddScoped<IUserCommands, UserCommands>()
+                .AddScoped<IUserQueries, UserQueries>()
+                .AddDbContext<UsersDbContext>(options => options.UseInMemoryDatabase(databaseName: "Users"))
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
