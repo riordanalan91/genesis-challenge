@@ -13,5 +13,10 @@ namespace Genesis.Challenge.Api.Services
         UserModel Create(UserCreationModel model);
 
         UserModel AuthenticateUser(string email, string password);
+
+        UserModel Update(string id,
+            string token = null,
+            string lastLoginOnUtc = null,
+            string lastUpdatedOnUtc = null);
     }
 }

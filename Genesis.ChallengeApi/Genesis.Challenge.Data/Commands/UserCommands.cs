@@ -34,8 +34,8 @@ namespace Genesis.Challenge.Data.Commands
                 Email = email,
                 Password = password,
                 TelephoneNumbers = telephoneNumbers,
-                CreatedOnUtc = DateTime.Now,
-                LastUpdatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastUpdatedOnUtc = DateTime.UtcNow,
                 LastLoginOnUtc = null
             });
             _usersDb.SaveChanges();
@@ -43,6 +43,45 @@ namespace Genesis.Challenge.Data.Commands
             return _usersDb.Users
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefault();
+        }
+
+        public UserDto Update(
+            string id, 
+            string token = null,
+            string lastUpdatedOnUtc = null,
+            string lastLoginOnUtc = null)
+        {
+            Guid userGuid = Guid.Empty;
+            Guid.TryParse(id, out userGuid);
+
+            var user = _usersDb.Users.Where(u => u.Id.Equals(userGuid)).FirstOrDefault();
+
+            if (user != null)
+            {
+                if (token != null) user.Token = token;
+                if (lastUpdatedOnUtc != null)
+                {
+                    DateTime lastUpdatedOn;
+                    var isValid = DateTime.TryParse(lastUpdatedOnUtc, out lastUpdatedOn);
+
+                    if (isValid) user.LastUpdatedOnUtc = lastUpdatedOn;
+                    else return null;
+                }
+                if (lastLoginOnUtc != null)
+                {
+                    DateTime lastLoginOn;
+                    var isValid = DateTime.TryParse(lastLoginOnUtc, out lastLoginOn);
+
+                    if (isValid) user.LastLoginOnUtc = lastLoginOn;
+                    else return null;
+                }
+
+                _usersDb.Users.Update(user);
+                _usersDb.SaveChanges();
+
+                return user;
+            }
+            else return null;
         }
     }
 }

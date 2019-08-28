@@ -8,9 +8,9 @@ namespace Genesis.Challenge.Api.Models
     public class UserModel
     {
         public Guid Id { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime LastUpdatedOn { get; set; }
-        public DateTime? LastLoginOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
+        public DateTime LastUpdatedOnUtc { get; set; }
+        public DateTime? LastLoginOnUtc { get; set; }
         public string Token { get; set; }
     }
 }

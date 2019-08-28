@@ -40,9 +40,9 @@ namespace Genesis.Challenge.Api.Services
             return new UserModel()
             {
                 Id = result.Id,
-                CreatedOn = result.CreatedOnUtc,
-                LastUpdatedOn = result.LastUpdatedOnUtc,
-                LastLoginOn = result?.LastLoginOnUtc
+                CreatedOnUtc = result.CreatedOnUtc,
+                LastUpdatedOnUtc = result.LastUpdatedOnUtc,
+                LastLoginOnUtc = result?.LastLoginOnUtc
             };
         }
 
@@ -53,12 +53,17 @@ namespace Genesis.Challenge.Api.Services
 
             var result = _userQueries.Get(userGuid);
 
+            if (result == null) {
+                return null;
+            }
+
             return new UserModel()
             {
                 Id = result.Id,
-                CreatedOn = result.CreatedOnUtc,
-                LastLoginOn = result.LastUpdatedOnUtc,
-                LastUpdatedOn = result.LastUpdatedOnUtc
+                CreatedOnUtc = result.CreatedOnUtc,
+                LastLoginOnUtc = result.LastUpdatedOnUtc,
+                LastUpdatedOnUtc = result.LastUpdatedOnUtc,
+                Token = result.Token
             };
         }
 
@@ -71,31 +76,35 @@ namespace Genesis.Challenge.Api.Services
                 var user = new UserModel()
                 {
                     Id = result.Id,
-                    CreatedOn = result.CreatedOnUtc,
-                    LastLoginOn = result.LastUpdatedOnUtc,
-                    LastUpdatedOn = result.LastUpdatedOnUtc
+                    CreatedOnUtc = result.CreatedOnUtc,
+                    LastLoginOnUtc = result.LastLoginOnUtc,
+                    LastUpdatedOnUtc = result.LastUpdatedOnUtc
                 };
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes("veryVerySecretKey");
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, user.Id.ToString())
-                    }),
-                    Expires = DateTime.UtcNow.AddMinutes(30), //TODO make a constant or setting
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.RsaSha256)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                user.Token = tokenHandler.WriteToken(token);
-
                 return user;
             }
-            else
+            else return null;
+        }
+
+        public UserModel Update(
+            string id,
+            string token = null,
+            string lastUpdatedOnUtc = null,
+            string lastLoginOnUtc = null)
+        {
+            var result = _userCommands.Update(id, token, lastUpdatedOnUtc, lastLoginOnUtc);
+            if (result == null)
             {
                 return null;
             }
+
+            return new UserModel()
+            {
+                Id = result.Id,
+                CreatedOnUtc = result.CreatedOnUtc,
+                LastLoginOnUtc = result.LastLoginOnUtc,
+                LastUpdatedOnUtc = result.LastUpdatedOnUtc,
+                Token = result.Token
+            };
         }
     }
 }

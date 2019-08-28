@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Genesis.Challenge.Api.Models;
+﻿using Genesis.Challenge.Api.Models;
 using Genesis.Challenge.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Genesis.Challenge.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private readonly IUsersService _users;
 
@@ -33,6 +28,13 @@ namespace Genesis.Challenge.Api.Controllers
             {
                 return BadRequest("Email already exists!");
             }
+            else
+            {
+                var userId = user.Id.ToString();
+                var token = GenerateJwt(user.Id);
+
+                user = _users.Update(userId, token: token); 
+            }
             return Ok(user);
         }
 
@@ -49,6 +51,15 @@ namespace Genesis.Challenge.Api.Controllers
             }
             else
             {
+                var userId = user.Id.ToString();
+                var token = GenerateJwt(user.Id);
+                var nowDateString = DateTime.UtcNow.ToString();
+
+                user = _users.Update(userId, 
+                    token: token, 
+                    lastLoginOnUtc: nowDateString,
+                    lastUpdatedOnUtc: nowDateString);
+
                 return Ok(user);
             }
         }
