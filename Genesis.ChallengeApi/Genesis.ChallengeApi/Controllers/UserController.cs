@@ -7,15 +7,18 @@ using System;
 
 namespace Genesis.Challenge.Api.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseApiController
+    public class UserController : ControllerBase
     {
         private readonly IUsersService _users;
+        private readonly IAuthenticationService _auth;
 
-        public UserController(IUsersService userService)
+        public UserController(IUsersService userService, IAuthenticationService authService)
         {
             _users = userService;
+            _auth = authService;
         }
 
         // POST api/user
@@ -31,7 +34,7 @@ namespace Genesis.Challenge.Api.Controllers
             else
             {
                 var userId = user.Id.ToString();
-                var token = GenerateJwt(user.Id);
+                var token = _auth.GenerateJwt(user.Id);
 
                 user = _users.Update(userId, token: token); 
             }
@@ -52,7 +55,7 @@ namespace Genesis.Challenge.Api.Controllers
             else
             {
                 var userId = user.Id.ToString();
-                var token = GenerateJwt(user.Id);
+                var token = _auth.GenerateJwt(user.Id);
                 var nowDateString = DateTime.UtcNow.ToString();
 
                 user = _users.Update(userId, 

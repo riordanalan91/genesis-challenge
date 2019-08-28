@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Genesis.Challenge.Api.Models;
 using Genesis.Challenge.Api.Services;
 using Genesis.Challenge.Data.Commands;
 using Genesis.Challenge.Data.Contexts;
@@ -56,9 +57,12 @@ namespace Genesis.Challenge.Api
                 });
 
             services
+                .AddOptions()
+                .Configure<AppSettings>(Configuration.GetSection("Jwt"))
                 .AddScoped<IUsersService, UsersService>()
                 .AddScoped<IUserCommands, UserCommands>()
                 .AddScoped<IUserQueries, UserQueries>()
+                .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddDbContext<UsersDbContext>(options => options.UseInMemoryDatabase(databaseName: "Users"))
                 .AddSwaggerGen(config => {
                     config.SwaggerDoc("v1", new Info {
